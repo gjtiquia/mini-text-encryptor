@@ -1,25 +1,31 @@
 import { useQuery } from "@tanstack/react-query";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 export function InnerApp() {
 
-    const [password, setPassword] = useState("");
-    const inputRef = useRef<HTMLTextAreaElement>(null);
+    const inputPasswordRef = useRef<HTMLInputElement>(null);
+    const inputTextRef = useRef<HTMLTextAreaElement>(null);
 
     const outputQuery = useQuery({
         queryKey: ["outputQuery"],
         queryFn: async () => {
 
-            // Get from DOM directly cuz useState is queued
-            const inputText = inputRef.current?.value ?? "ERROR: Cannot find input <textarea/>";
+            if (!inputPasswordRef.current || !inputTextRef.current)
+                throw new Error("Unable to find DOM elements!");
 
-            return { output: inputText };
+            // Get from DOM directly cuz useState is queued
+            const inputPassword = inputPasswordRef.current.value;
+            const inputText = inputTextRef.current.value;
+
+            // TODO : Async encrypt
+            const encryptedText = inputText + inputPassword;
+
+            return { output: encryptedText };
         },
-        retry: false,
     })
 
     function onInputChanged() {
-        outputQuery.refetch(); // TODO : updates... kinda late with previous value not latest value
+        outputQuery.refetch();
     }
 
     function getOutputText() {
@@ -38,13 +44,13 @@ export function InnerApp() {
 
             <div className="flex gap-2">
                 <p className="text-white">Password:</p>
-                <input type="password" className="rounded-md px-2" value={password} onChange={e => setPassword(e.target.value)} />
+                <input ref={inputPasswordRef} type="password" className="rounded-md px-2" onChange={() => onInputChanged()} />
             </div>
 
             <div className="w-full flex-grow flex flex-col gap-2">
                 <h2 className="text-white font-bold">Raw Text:</h2>
                 <textarea
-                    ref={inputRef}
+                    ref={inputTextRef}
                     className="rounded-md w-full flex-grow p-2 resize-none"
                     onChange={() => onInputChanged()}
                 />
