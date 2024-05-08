@@ -69,7 +69,12 @@ export function MainView() {
             </div>
 
             <div className="w-full flex-grow flex flex-col gap-2">
-                <h2 className="text-white font-bold">Encrypted Text:</h2>
+                <div className="flex gap-2">
+                    <h2 className="text-white font-bold">Encrypted Text:</h2>
+                    <button className="bg-slate-600 text-white px-4 rounded-md font-bold">Copy Text</button>
+                    {/* // TODO : Copy mechanism */}
+                    {/* // TODO : Copy toast */}
+                </div>
                 <textarea
                     className="rounded-md w-full flex-grow p-2 resize-none"
                     value={getOutputText()}
