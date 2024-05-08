@@ -1,12 +1,12 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { InnerApp } from "./InnerApp";
+import { MainView } from "./MainView";
 
 const queryClient = new QueryClient()
 
 function App() {
     return (
         <QueryClientProvider client={queryClient}>
-            <InnerApp />
+            <MainView />
         </QueryClientProvider>
     )
 }
